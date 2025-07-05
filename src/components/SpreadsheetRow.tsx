@@ -1,31 +1,6 @@
 import React from 'react';
 import SpreadsheetCell from './SpreadsheetCell';
-
-interface Column {
-  key: string;
-  label: string;
-  width: number;
-}
-
-interface RowData {
-  id: number;
-  jobRequest?: string;
-  submitted?: string;
-  status?: string;
-  submitter?: string;
-  url?: string;
-  assigned?: string;
-  priority?: string;
-  dueDate?: string;
-  estValue?: number;
-  plus?: string;
-  [key: string]: any; // For any additional dynamic properties
-}
-
-interface CellPosition {
-  row: number;
-  col: number;
-}
+import type { RowData, Column, CellPosition } from '../types';
 
 interface SpreadsheetRowProps {
   row: RowData;

@@ -81,6 +81,7 @@ export default function App() {
         setSelectedCell({ row: -1, col: -1 });
         break;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCell, editingCell, filteredData.length]);
 
   useEffect(() => {
