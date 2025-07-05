@@ -1,32 +1,7 @@
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 import SpreadsheetRow from './SpreadsheetRow';
-
-interface Column {
-  key: string;
-  label: string;
-  width: number;
-}
-
-interface RowData {
-  id: number;
-  jobRequest?: string;
-  submitted?: string;
-  status?: string;
-  submitter?: string;
-  url?: string;
-  assigned?: string;
-  priority?: string;
-  dueDate?: string;
-  estValue?: number;
-  plus?: string;
-  [key: string]: unknown; // For any additional dynamic properties
-}
-
-interface CellPosition {
-  row: number;
-  col: number;
-}
+import type { RowData, Column, CellPosition } from '../types';
 
 interface SpreadsheetProps {
   data: RowData[];
@@ -77,7 +52,6 @@ export default function Spreadsheet({
                     {column.key === 'submitter' && <span>👤</span>}
                     {column.key === 'url' && <span>🌐</span>}
                     {column.key === 'assigned' && <span>👥</span>}
-                   
                     <span>{column.label}</span>
                     {column.key === 'plus' && <span></span>}
                   </div>
@@ -111,7 +85,6 @@ export default function Spreadsheet({
             />
           ))}
           
-          {/* Empty rows */}
           {Array.from({ length: 15 }, (_, index) => (
             <tr key={`empty-${index}`} className="hover:bg-gray-50">
               <td className="px-4 py-3 text-sm text-gray-400 border-r border-gray-100 bg-gray-50">
@@ -122,9 +95,7 @@ export default function Spreadsheet({
                   key={`empty-${index}-${column.key}`}
                   style={{ width: column.width }}
                   onClick={() => onCellClick(data.length + index, colIndex)}
-                >
-                  {/* Empty cell content */}
-                </td>
+                />
               ))}
             </tr>
           ))}

@@ -14,7 +14,7 @@ export interface RowData {
 }
 
 export interface Column {
-  key: string;
+  key: keyof RowData | 'plus'; 
   label: string;
   width: number;
 }
