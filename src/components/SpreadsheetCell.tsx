@@ -1,19 +1,45 @@
-import { ChevronDown } from 'lucide-react';
+import React from 'react';
+
+interface Column {
+  key: string;
+  label: string;
+  width: number;
+}
+
+interface RowData {
+  id: number;
+  jobRequest?: string;
+  submitted?: string;
+  status?: string;
+  submitter?: string;
+  url?: string;
+  assigned?: string;
+  priority?: string;
+  dueDate?: string;
+  estValue?: number;
+  plus?: string;
+  [key: string]: any; // For any additional dynamic properties
+}
+
+interface CellPosition {
+  row: number;
+  col: number;
+}
 
 interface SpreadsheetCellProps {
-  row: any;
+  row: RowData;
   rowIndex: number;
-  column: any;
+  column: Column;
   colIndex: number;
-  selectedCell: { row: number; col: number };
-  editingCell: { row: number; col: number };
+  selectedCell: CellPosition;
+  editingCell: CellPosition;
   editValue: string;
   onCellClick: (rowIndex: number, colIndex: number) => void;
   onCellDoubleClick: (rowIndex: number, colIndex: number) => void;
   onEditSubmit: () => void;
   onEditCancel: () => void;
   onEditValueChange: (value: string) => void;
-  cellRefs: React.RefObject<any>;
+  cellRefs: React.RefObject<Record<string, HTMLTableCellElement | null>>;
 }
 
 export default function SpreadsheetCell({
@@ -133,7 +159,7 @@ export default function SpreadsheetCell({
           : 'text-gray-900'
       }`}>
         {column.key === 'estValue' 
-          ? `${(cellValue / 100000).toFixed(3)} ₹`
+          ? `${(Number(cellValue) / 100000).toFixed(3)} ₹`
           : column.key === 'url'
           ? cellValue
           : cellValue}
@@ -143,7 +169,11 @@ export default function SpreadsheetCell({
 
   return (
     <td
-      ref={el => cellRefs.current[`${rowIndex}-${colIndex}`] = el}
+      ref={el => {
+        if (cellRefs.current) {
+          cellRefs.current[`${rowIndex}-${colIndex}`] = el;
+        }
+      }}
       className={`px-4 py-3 text-sm border-r border-gray-100 cursor-cell relative ${
         isSelected ? 'bg-blue-50 ring-2 ring-blue-500 ring-inset' : ''
       } ${rowIndex === 7 && colIndex === 0 ? 'ring-2 ring-blue-400 bg-blue-50' : ''}`}

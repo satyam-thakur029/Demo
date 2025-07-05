@@ -1,4 +1,5 @@
 import { ChevronDown } from 'lucide-react';
+import React from 'react';
 import SpreadsheetRow from './SpreadsheetRow';
 
 interface Column {
@@ -7,13 +8,28 @@ interface Column {
   width: number;
 }
 
+interface RowData {
+  id: number;
+  jobRequest?: string;
+  submitted?: string;
+  status?: string;
+  submitter?: string;
+  url?: string;
+  assigned?: string;
+  priority?: string;
+  dueDate?: string;
+  estValue?: number;
+  plus?: string;
+  [key: string]: unknown; // For any additional dynamic properties
+}
+
 interface CellPosition {
   row: number;
   col: number;
 }
 
 interface SpreadsheetProps {
-  data: any[];
+  data: RowData[];
   columns: Column[];
   selectedCell: CellPosition;
   editingCell: CellPosition;
@@ -23,7 +39,7 @@ interface SpreadsheetProps {
   onEditSubmit: () => void;
   onEditCancel: () => void;
   onEditValueChange: (value: string) => void;
-  cellRefs: React.RefObject<any>;
+  cellRefs: React.RefObject<Record<string, HTMLTableCellElement | null>>;
 }
 
 export default function Spreadsheet({
@@ -60,14 +76,14 @@ export default function Spreadsheet({
                     {column.key === 'status' && <span>📊</span>}
                     {column.key === 'submitter' && <span>👤</span>}
                     {column.key === 'url' && <span>🌐</span>}
-                    {column.key === 'assigned' && <span>👥</span> }
+                    {column.key === 'assigned' && <span>👥</span>}
                    
                     <span>{column.label}</span>
-                     {column.key === 'plus' && <span></span>}
+                    {column.key === 'plus' && <span></span>}
                   </div>
                   <button 
                     onClick={() => console.log(`Column sort clicked: ${column.label}`)}
-                    className=" group-hover:opacity-100 p-1 hover:bg-gray-200 rounded"
+                    className="group-hover:opacity-100 p-1 hover:bg-gray-200 rounded"
                   >
                     <ChevronDown className="w-3 h-3" />
                   </button>
@@ -104,11 +120,10 @@ export default function Spreadsheet({
               {columns.map((column, colIndex) => (
                 <td
                   key={`empty-${index}-${column.key}`}
-               
                   style={{ width: column.width }}
                   onClick={() => onCellClick(data.length + index, colIndex)}
                 >
-                 
+                  {/* Empty cell content */}
                 </td>
               ))}
             </tr>

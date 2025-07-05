@@ -1,18 +1,45 @@
+import React from 'react';
 import SpreadsheetCell from './SpreadsheetCell';
 
+interface Column {
+  key: string;
+  label: string;
+  width: number;
+}
+
+interface RowData {
+  id: number;
+  jobRequest?: string;
+  submitted?: string;
+  status?: string;
+  submitter?: string;
+  url?: string;
+  assigned?: string;
+  priority?: string;
+  dueDate?: string;
+  estValue?: number;
+  plus?: string;
+  [key: string]: any; // For any additional dynamic properties
+}
+
+interface CellPosition {
+  row: number;
+  col: number;
+}
+
 interface SpreadsheetRowProps {
-  row: any;
+  row: RowData;
   rowIndex: number;
-  columns: any[];
-  selectedCell: { row: number; col: number };
-  editingCell: { row: number; col: number };
+  columns: Column[];
+  selectedCell: CellPosition;
+  editingCell: CellPosition;
   editValue: string;
   onCellClick: (rowIndex: number, colIndex: number) => void;
   onCellDoubleClick: (rowIndex: number, colIndex: number) => void;
   onEditSubmit: () => void;
   onEditCancel: () => void;
   onEditValueChange: (value: string) => void;
-  cellRefs: React.RefObject<any>;
+  cellRefs: React.RefObject<Record<string, HTMLTableCellElement | null>>;
 }
 
 export default function SpreadsheetRow({
