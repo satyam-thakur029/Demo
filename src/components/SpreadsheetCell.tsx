@@ -8,17 +8,17 @@ interface Column {
 
 interface RowData {
   id: number;
-  jobRequest?: string;
-  submitted?: string;
-  status?: string;
-  submitter?: string;
-  url?: string;
-  assigned?: string;
-  priority?: string;
-  dueDate?: string;
-  estValue?: number;
-  plus?: string;
-  [key: string]: any; // For any additional dynamic properties
+  jobRequest: string;
+  submitted: string;
+  status: string;
+  submitter: string;
+  url: string;
+  assigned: string;
+  priority: string;
+  dueDate: string;
+  estValue: number;
+  plus: string;
+  [key: string]: string | number; // More specific than 'any'
 }
 
 interface CellPosition {
@@ -59,7 +59,7 @@ export default function SpreadsheetCell({
 }: SpreadsheetCellProps) {
   const isSelected = selectedCell.row === rowIndex && selectedCell.col === colIndex;
   const isEditing = editingCell.row === rowIndex && editingCell.col === colIndex;
-  const cellValue = row[column.key];
+  const cellValue = row[column.key as keyof RowData]; // Type-safe access
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -149,9 +149,9 @@ export default function SpreadsheetCell({
     return (
       <span className={`${
         column.key === 'status' 
-          ? `px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(cellValue)}`
+          ? `px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(cellValue as string)}`
           : column.key === 'priority'
-          ? getPriorityColor(cellValue)
+          ? getPriorityColor(cellValue as string)
           : column.key === 'estValue'
           ? 'font-medium text-gray-900'
           : column.key === 'url'
@@ -161,8 +161,8 @@ export default function SpreadsheetCell({
         {column.key === 'estValue' 
           ? `${(Number(cellValue) / 100000).toFixed(3)} ₹`
           : column.key === 'url'
-          ? cellValue
-          : cellValue}
+          ? cellValue as string
+          : cellValue as string}
       </span>
     );
   };

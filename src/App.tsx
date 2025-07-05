@@ -6,13 +6,28 @@ import Spreadsheet from './components/Spreadsheet';
 import { initialData, columns } from './data';
 import FooterTabs from './components/FooterTabs';
 
+interface RowData {
+  id: number;
+  jobRequest: string;
+  submitted: string;
+  status: string;
+  submitter: string;
+  url: string;
+  assigned: string;
+  priority: string;
+  dueDate: string;
+  estValue: number;
+  plus: string;
+  [key: string]: string | number; // Index signature
+}
+
 export default function App() {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState<RowData[]>(initialData);
   const [selectedCell, setSelectedCell] = useState({ row: -1, col: -1 });
   const [editingCell, setEditingCell] = useState({ row: -1, col: -1 });
   const [editValue, setEditValue] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const cellRefs = useRef({});
+  const cellRefs = useRef<Record<string, HTMLTableCellElement | null>>({});
 
   const filteredData = data.filter(row => 
     Object.values(row).some(value => 
@@ -29,7 +44,8 @@ export default function App() {
   const handleCellDoubleClick = (rowIndex: number, colIndex: number) => {
     console.log(`Cell double-clicked: Row ${rowIndex}, Col ${colIndex}`);
     setEditingCell({ row: rowIndex, col: colIndex });
-    const currentValue = filteredData[rowIndex][columns[colIndex].key];
+    const columnKey = columns[colIndex].key;
+    const currentValue = filteredData[rowIndex][columnKey as keyof RowData];
     setEditValue(currentValue.toString());
   };
 
@@ -77,10 +93,12 @@ export default function App() {
       const newData = [...data];
       const originalRowIndex = data.findIndex(item => item.id === filteredData[editingCell.row].id);
       const columnKey = columns[editingCell.col].key;
+      
       newData[originalRowIndex] = { 
         ...newData[originalRowIndex], 
         [columnKey]: columnKey === 'estValue' ? parseInt(editValue) || 0 : editValue 
       };
+      
       setData(newData);
       setEditingCell({ row: -1, col: -1 });
       console.log(`Cell updated: ${columnKey} = ${editValue}`);
